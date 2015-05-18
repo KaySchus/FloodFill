@@ -5,15 +5,21 @@ from abc import ABCMeta, abstractmethod
 from PIL import Image, ImageDraw
 
 class Cell:
+	(BLANK, RED, BLUE, WALL) = (0, 1, 2, 3)
+
 	def __init__(self):
-		self.owner = 0
+		self.owner = Cell.BLANK
 
 class Grid:
-	def __init__(self, width, height, writer):
+	def __init__(self, width, height, writer, generator):
 		self.width = width
 		self.height = height
 		self.grid = [[Cell() for j in range(width)] for i in range(height)]
 		self.writer = writer
+		self.generator = generator
+
+	def generate(self):
+		self.generator.generate(self)
 
 	def output(self):
 		self.writer.output(self)
@@ -30,7 +36,7 @@ class PrintWriter(Writer):
 			stored_output = ""
 
 			for j in range(grid.width):
-				stored_output += str(grid.grid[i][j].owner)
+				stored_output += str(grid.grid[i][j])
 				stored_output += " "
 
 			print "%s" % stored_output
@@ -43,19 +49,19 @@ class ImageWriter(Writer):
 		image = Image.new('RGBA', (grid.width, grid.height), (255, 255, 255, 0))
 		draw = ImageDraw.Draw(image)
 
-		for i in range(grid.width):
-			for j in range(grid.height):
+		for i in range(grid.height):
+			for j in range(grid.width):
 				if (grid.grid[i][j] == 0):
-					draw.point((i, j), (255, 255, 255, 0))
+					draw.point((i, j), (255, 255, 255, 255))
 
 				if (grid.grid[i][j] == 1):
-					draw.point((i, j), (255, 0, 0, 0))
+					draw.point((i, j), (255, 0, 0, 255))
 
 				if (grid.grid[i][j] == 2):
-					draw.point((i, j), (0, 0, 255, 0))
+					draw.point((i, j), (0, 0, 255, 255))
 
 				if (grid.grid[i][j] >= 3):
-					draw.point((i, j), (0, 0, 0, 0))
+					draw.point((i, j), (0, 0, 0, 255))
 
 		del draw
 

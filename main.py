@@ -1,7 +1,9 @@
 #!/usr/bin/python
 
 import grid
+import generator
 
-test = grid.Grid(5, 5, grid.ImageWriter("test_drawing.png"))
+test = grid.Grid(256, 256, grid.ImageWriter("bars.png"), generator.BoxGenerator())
+test.generate()
 test.output()
 

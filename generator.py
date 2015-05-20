@@ -15,4 +15,3 @@ class BoxGenerator(Generator):
 					grid.grid[i][j] = Cell.WALL
 				else:
 					grid.grid[i][j] = Cell.BLANK
-

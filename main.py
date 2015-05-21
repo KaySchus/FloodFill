@@ -1,12 +1,13 @@
 #!/usr/bin/python
 
 import sys
-import grid
-import generator
+from State import Grid
+from Generator import BoxGenerator
+from Output import ImageWriter
 
 image_title = sys.argv[1]
 
-test = grid.Grid(256, 256, grid.ImageWriter("images/" + image_title), generator.BoxGenerator())
+test = Grid(256, 256, ImageWriter("images/" + image_title), BoxGenerator())
 test.generate()
 test.output()
 

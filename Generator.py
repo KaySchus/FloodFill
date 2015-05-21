@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from random import randint
 from State import Cell
 
 class Generator:
@@ -15,4 +16,9 @@ class BoxGenerator(Generator):
 					grid.grid[i][j] = Cell.WALL
 				else:
 					grid.grid[i][j] = Cell.BLANK
+
+		x = randint(1, grid.width - 1)
+		y = randint(1, grid.height - 1)
+
+		grid.grid[y][x] = Cell.RED
 

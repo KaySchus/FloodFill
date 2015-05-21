@@ -20,5 +20,5 @@ class Grid:
 		self.generator.generate(self)
 
 	def output(self):
-		self.writer.output(self)
+		self.writer.output()
 

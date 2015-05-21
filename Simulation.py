@@ -10,15 +10,10 @@ class FloodSimulator:
 
 		print location
 
-		loop_count = 0
-		filename = self.grid.writer.filename
-		filename_parts = filename.split('.')
-
 		while (location != -1):
 			location = self.take_turn(location)
-			self.grid.writer.filename = filename_parts[0] + "_" + str(loop_count) + "." + filename_parts[1]
-			self.grid.output()
-			loop_count += 1
+			print location
+			self.grid.writer.save_frame(self.grid)
 
 	def find_start(self):
 		for i in range(self.grid.height):
@@ -35,20 +30,21 @@ class FloodSimulator:
 		west = self.grid.grid[location[0]][location[1] - 1]
 
 		if (north == Cell.BLANK):
-			north = Cell.RED
-			location += (1, 0)
+			print "North"
+			self.grid.grid[location[0] + 1][location[1]] = Cell.RED
+			location = (location[0] + 1, location[1])
 
-		elif (east == Cell.BLANK):
-			east = Cell.RED
-			location += (0, 1)
-		
 		elif (south == Cell.BLANK):
-			south = Cell.RED
-			location += (-1, 0)
+			self.grid.grid[location[0] - 1][location[1]] = Cell.RED
+			location = (location[0] - 1, location[1])
+		
+		elif (east == Cell.BLANK):
+			self.grid.grid[location[0]][location[1] + 1] = Cell.RED
+			location = (location[0], location[1] + 1)
 
 		elif (west == Cell.BLANK):
-			west = Cell.RED
-			location += (0, -1)
+			self.grid.grid[location[0]][location[1] - 1] = Cell.RED
+			location = (location[0], location[1] - 1)
 
 		else:
 			return -1

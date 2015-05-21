@@ -1,12 +1,13 @@
 from abc import ABCMeta, abstractmethod
 from State import Grid
 from PIL import Image, ImageDraw
+from images2swf import writeSwf
 
 class Writer:
 	__metaclass__ = ABCMeta
 
 	@abstractmethod
-	def output(self, gid): pass
+	def output(self): pass
 
 class PrintWriter(Writer):
 	def output(self, grid):
@@ -22,8 +23,9 @@ class PrintWriter(Writer):
 class ImageWriter(Writer):
 	def __init__(self, filename):
 		self.filename = filename
+		self.files = []
 
-	def output(self, grid):
+	def save_frame(self, grid):
 		image = Image.new('RGBA', (grid.width, grid.height), (255, 255, 255, 0))
 		draw = ImageDraw.Draw(image)
 
@@ -44,5 +46,7 @@ class ImageWriter(Writer):
 				draw.point((i, j), color)
 
 		del draw
-		image.save(self.filename, "PNG")
-					
+		self.files.append(image.resize((grid.width * 10, grid.height * 10), resample = Image.NEAREST))
+		
+	def output(self):
+		writeSwf(self.filename, self.files, fps = 100, delays = None) 			

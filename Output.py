@@ -29,9 +29,9 @@ class ImageWriter(Writer):
 		image = Image.new('RGBA', (grid.width, grid.height), (255, 255, 255, 0))
 		draw = ImageDraw.Draw(image)
 
-		for i in range(grid.height):
-			for j in range(grid.width):
-				point = grid.grid[i][j]
+		for y in range(grid.height):
+			for x in range(grid.width):
+				point = grid.getCell(x, y)
 				color = (255, 255, 255, 255)
 
 				if (point == 1):
@@ -43,7 +43,7 @@ class ImageWriter(Writer):
 				if (point == 3):
 					color = (0, 0, 0, 255)
 
-				draw.point((i, j), color)
+				draw.point((x, y), color)
 
 		del draw
 		self.files.append(image.resize((grid.width * 10, grid.height * 10), resample = Image.NEAREST))

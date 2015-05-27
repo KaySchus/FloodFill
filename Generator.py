@@ -10,15 +10,15 @@ class Generator:
 
 class BoxGenerator(Generator):
 	def generate(self, grid):
-		for i in range(grid.height):
-			for j in range(grid.width):
-				if ((j == 0) or (i == 0) or (j == grid.width - 1) or (i == grid.height - 1)):
-					grid.grid[i][j] = Cell.WALL
+		for y in range(grid.height):
+			for x in range(grid.width):
+				if ((x == 0) or (y == 0) or (x == grid.width - 1) or (y == grid.height - 1)):
+					grid.setCell(x, y, Cell.WALL)
 				else:
-					grid.grid[i][j] = Cell.BLANK
+					grid.setCell(x, y, Cell.BLANK)
 
 		x = randint(1, grid.width - 1)
 		y = randint(1, grid.height - 1)
 
-		grid.grid[y][x] = Cell.RED
+		grid.setCell(x, y, Cell.RED)
 

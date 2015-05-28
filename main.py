@@ -2,13 +2,14 @@
 
 import sys
 from State import Grid
-from Generator import BoxGenerator
+from Generator import CaveGenerator
 from Output import ImageWriter
 from Simulation import FloodSimulator
 
 image_title = sys.argv[1]
 
-test = Grid(20, 20, ImageWriter("images/" + image_title), BoxGenerator())
+test = Grid(100, 100, ImageWriter("images/" + image_title))
+test.setGenerator(CaveGenerator(test, 100))
 test.generate()
 
 simulator = FloodSimulator(test)

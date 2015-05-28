@@ -6,7 +6,7 @@ class Generator:
 	__metaclass__ = ABCMeta
 
 	@abstractmethod
-	def generate(self, grid): pass
+	def generate(self): pass
 
 class BoxGenerator(Generator):
 	def generate(self, grid):
@@ -22,3 +22,90 @@ class BoxGenerator(Generator):
 
 		grid.setCell(x, y, Cell.RED)
 
+class CaveGenerator(Generator):
+	def __init__(self, grid, numpasses):
+		self.grid = grid
+		self.max_pass = numpasses
+
+	def seed(self):
+		for y in range(self.grid.height):
+			for x in range(self.grid.width):
+				if randint(0, 1) == 1:
+					self.grid.setCell(x, y, Cell.WALL)
+
+	def smooth(self):
+		new_cells = [[Cell() for x in range(self.grid.width)] for y in range(self.grid.height)]		
+
+		for y in range(self.grid.height):
+			for x in range(self.grid.width):
+				value = 0
+
+				if (self.grid.getCell(x, y) == Cell.WALL):
+					value += 1
+				else:
+					value -= 1
+
+				if (x != 0):
+					if (self.grid.getCell(x - 1, y) == Cell.WALL):
+						value += 1
+					else:
+						value -= 1
+
+				if (y != 0):
+					if (self.grid.getCell(x, y - 1) == Cell.WALL):
+						value += 1
+					else:
+						value -= 1
+
+				if (x != 0 and y != 0):
+					if (self.grid.getCell(x - 1, y - 1) == Cell.WALL):
+						value += 1
+					else:
+						value -= 1
+							
+				if (x != self.grid.width - 1):
+					if (self.grid.getCell(x + 1, y) == Cell.WALL):
+						value += 1
+					else:
+						value -= 1
+
+				if (y != self.grid.height - 1):
+					if (self.grid.getCell(x, y + 1) == Cell.WALL):
+						value += 1
+					else:
+						value -= 1
+
+				if (x != self.grid.width - 1 and y != 0):
+					if (self.grid.getCell(x + 1, y - 1) == Cell.WALL):
+						value += 1
+					else:
+						value -= 1
+
+				if (x != 0 and y != self.grid.height - 1):
+					if (self.grid.getCell(x - 1, y + 1) == Cell.WALL):
+						value += 1
+					else:
+						value -= 1
+
+				if (x != self.grid.width - 1 and y != self.grid.height - 1):
+					if (self.grid.getCell(x + 1, y + 1) == Cell.WALL):
+						value += 1
+					else:
+						value -= 1
+
+				if (value > 0):
+					new_cells[y][x] = Cell.WALL
+				else:
+					new_cells[y][x] = Cell.BLANK
+
+		for y in range(self.grid.height):
+			for x in range(self.grid.width):
+				self.grid.setCell(x, y, new_cells[y][x])
+
+	def generate(self):
+		self.seed()
+		
+		for i in range(self.max_pass):
+			self.smooth()
+
+		self.grid.setCell(randint(1, self.grid.width - 1), randint(1, self.grid.height - 1), Cell.RED)

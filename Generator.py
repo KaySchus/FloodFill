@@ -104,8 +104,11 @@ class CaveGenerator(Generator):
 
 	def generate(self):
 		self.seed()
-		
+	
+		self.grid.writer.save_frame(self.grid)	
+
 		for i in range(self.max_pass):
 			self.smooth()
+			self.grid.writer.save_frame(self.grid)
 
 		self.grid.setCell(randint(1, self.grid.width - 1), randint(1, self.grid.height - 1), Cell.RED)

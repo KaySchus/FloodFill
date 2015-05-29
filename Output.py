@@ -49,4 +49,4 @@ class ImageWriter(Writer):
 		self.files.append(image.resize((grid.width * 10, grid.height * 10), resample = Image.NEAREST))
 		
 	def output(self):
-		writeSwf(self.filename, self.files, fps = 100, delays = None) 			
+		writeSwf(self.filename, self.files, fps = 5, delays = None) 			

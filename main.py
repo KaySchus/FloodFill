@@ -9,7 +9,7 @@ from Simulation import FloodSimulator
 image_title = sys.argv[1]
 
 test = Grid(100, 100, ImageWriter("images/" + image_title))
-test.setGenerator(CaveGenerator(test, 100))
+test.setGenerator(CaveGenerator(test, 50))
 test.generate()
 
 simulator = FloodSimulator(test)

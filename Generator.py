@@ -110,5 +110,11 @@ class CaveGenerator(Generator):
 		for i in range(self.max_pass):
 			self.smooth()
 			self.grid.writer.save_frame(self.grid)
+		
+		suitable_space = False
+		while suitable_space == False:
+			new_location = (randint(1, self.grid.width - 1), randint(1, self.grid.height - 1))
+			if self.grid.getCell(new_location) == Cell.BLANK:
+				suitable_space = True
 
-		self.grid.setCell(randint(1, self.grid.width - 1), randint(1, self.grid.height - 1), Cell.RED)
+		self.grid.setCell(new_location, Cell.RED)

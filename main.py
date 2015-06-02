@@ -8,7 +8,7 @@ from Simulation import FloodSimulator, RandomSimulator
 
 image_title = sys.argv[1]
 
-test = Grid(100, 100, ImageWriter("images/" + image_title))
+test = Grid(50, 50, ImageWriter("images/" + image_title))
 test.setGenerator(BoxGenerator(test))
 test.generate()
 

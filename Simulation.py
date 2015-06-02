@@ -130,15 +130,20 @@ class RandomSimulator:
 			if (coords != -1):
 				self.converted_coords.append(coords)
 			else:
-				count = -2
-				no_place_found = True
-				while (count > (len(self.converted_coords) * -1) and no_place_found == True):
-					location = Location(self.converted_coords[count], self.grid)
-					print count
-					count -= 1
+				location_found = False
+				target = len(self.converted_coords) - 2
+
+				while (location_found == False and target > 0):
+					location = Location(self.converted_coords[target], self.grid)
 					if (location.hasFreeSpace()):
-						coords = location.getRandomDirection().coords
-						no_place_found = False
+						coords = location.location
+						location_found = True
+						print "Found free space back some squares"
+					else:
+						coords = -1
+						print "No space found"
+
+					target = target - 1
 
 			self.grid.writer.save_frame(self.grid)
 

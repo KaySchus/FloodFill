@@ -9,18 +9,21 @@ class Generator:
 	def generate(self): pass
 
 class BoxGenerator(Generator):
-	def generate(self, grid):
-		for y in range(grid.height):
-			for x in range(grid.width):
-				if ((x == 0) or (y == 0) or (x == grid.width - 1) or (y == grid.height - 1)):
-					grid.setCell(x, y, Cell.WALL)
+	def __init__(self, grid):
+		self.grid = grid
+
+	def generate(self):
+		for y in range(self.grid.height):
+			for x in range(self.grid.width):
+				if ((x == 0) or (y == 0) or (x == self.grid.width - 1) or (y == self.grid.height - 1)):
+					self.grid.setCell(x, y, Cell.WALL)
 				else:
-					grid.setCell(x, y, Cell.BLANK)
+					self.grid.setCell(x, y, Cell.BLANK)
 
-		x = randint(1, grid.width - 1)
-		y = randint(1, grid.height - 1)
+		x = randint(1, self.grid.width - 1)
+		y = randint(1, self.grid.height - 1)
 
-		grid.setCell(x, y, Cell.RED)
+		self.grid.setCell(x, y, Cell.RED)
 
 class CaveGenerator(Generator):
 	def __init__(self, grid, numpasses):
@@ -109,7 +112,6 @@ class CaveGenerator(Generator):
 
 		for i in range(self.max_pass):
 			self.smooth()
-			self.grid.writer.save_frame(self.grid)
 		
 		suitable_space = False
 		while suitable_space == False:

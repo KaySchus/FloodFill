@@ -26,7 +26,6 @@ class Grid:
 
 	def getCell(self, *args):
 		if len(args) == 1:
-			print args[0]
 			return self.cells[args[0][1]][args[0][0]]
 		elif len(args) == 2:
 			return self.cells[args[1]][args[0]]

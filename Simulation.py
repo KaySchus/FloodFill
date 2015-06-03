@@ -68,7 +68,11 @@ class Location:
 class Direction:
 	def __init__(self, coords, grid):
 		self.coords = coords
-		self.cell = grid.getCell(coords)
+		
+		if (inBounds(grid, coords)):
+			self.cell = grid.getCell(coords)
+		else:
+			self.cell = Cell.WALL
 
 class FloodSimulator:
 	def __init__(self, grid):

@@ -2,6 +2,15 @@ from abc import ABCMeta, abstractmethod
 from random import randint
 from State import Cell
 
+def set_free_space(grid, color):	
+	suitable_space = False
+	while suitable_space == False:
+		new_location = (randint(1, grid.width - 1), randint(1, grid.height - 1))
+		if grid.getCell(new_location) == Cell.BLANK:
+			suitable_space = True
+
+	grid.setCell(new_location, color)
+
 class Generator:
 	__metaclass__ = ABCMeta
 
@@ -20,10 +29,8 @@ class BoxGenerator(Generator):
 				else:
 					self.grid.setCell(x, y, Cell.BLANK)
 
-		x = randint(1, self.grid.width - 1)
-		y = randint(1, self.grid.height - 1)
-
-		self.grid.setCell(x, y, Cell.RED)
+		set_free_space(self.grid, Cell.RED)
+		set_free_space(self.grid, Cell.BLUE)
 
 class CaveGenerator(Generator):
 	def __init__(self, grid, numpasses):
@@ -113,10 +120,5 @@ class CaveGenerator(Generator):
 		for i in range(self.max_pass):
 			self.smooth()
 		
-		suitable_space = False
-		while suitable_space == False:
-			new_location = (randint(1, self.grid.width - 1), randint(1, self.grid.height - 1))
-			if self.grid.getCell(new_location) == Cell.BLANK:
-				suitable_space = True
-
-		self.grid.setCell(new_location, Cell.RED)
+		set_free_space(self.grid, Cell.RED)
+		set_free_space(self.grid, Cell.BLUE)

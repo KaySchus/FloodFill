@@ -79,40 +79,51 @@ class FloodSimulator:
 		self.grid = grid
 
 	def simulate(self):
-		coords = self.find_start()
+		red_coords = self.find_start(Cell.RED)
+		blue_coords = self.find_start(Cell.BLUE)
 
-		print coords
+		print red_coords
+		print blue_coords
 
-		while (coords != -1):
-			coords = self.take_turn(coords)
-			print coords
+		done = False
+
+		while (done == False):
+			if (red_coords != -1):
+				red_coords = self.take_turn(red_coords, Cell.RED)
+
+			if (blue_coords != -1):
+				blue_coords = self.take_turn(blue_coords, Cell.BLUE)
+
+			if (blue_coords == -1 and red_coords == -1):
+				done = True
+
 			self.grid.writer.save_frame(self.grid)
 
-	def find_start(self):
+	def find_start(self, color):
 		for y in range(self.grid.height):
 			for x in range(self.grid.width):
-				if (self.grid.getCell(x, y) == Cell.RED):
+				if (self.grid.getCell(x, y) == color):
 					return (x, y)
 
 		return -1
 
-	def take_turn(self, coords):
+	def take_turn(self, coords, color):
 		location = Location(coords, self.grid)
 
 		if (location.isDirectionFree("north") and inBounds(self.grid, location.north.coords)):
-			self.grid.setCell(location.north.coords, Cell.RED)
+			self.grid.setCell(location.north.coords, color)
 			return location.north.coords
 
 		elif (location.isDirectionFree("south") and inBounds(self.grid, location.south.coords)):
-			self.grid.setCell(location.south.coords, Cell.RED)
+			self.grid.setCell(location.south.coords, color)
 			return location.south.coords
 		
 		elif (location.isDirectionFree("east") and inBounds(self.grid, location.east.coords)):
-			self.grid.setCell(location.east.coords, Cell.RED)
+			self.grid.setCell(location.east.coords, color)
 			return location.east.coords
 
 		elif (location.isDirectionFree("west") and inBounds(self.grid, location.east.coords)):
-			self.grid.setCell(location.west.coords, Cell.RED)
+			self.grid.setCell(location.west.coords, color)
 			return location.west.coords
 
 		else:
@@ -121,51 +132,81 @@ class FloodSimulator:
 class RandomSimulator:
 	def __init__(self, grid):
 		self.grid = grid
-		self.converted_coords = []
+		self.red_conv_coords = []
+		self.blue_conv_coords = []
 
 	def simulate(self):
-		coords = self.find_start()
+		red_coords = self.find_start(Cell.RED)
+		blue_coords = self.find_start(Cell.BLUE)
 
-		self.converted_coords.append(coords)
+		self.red_conv_coords.append(red_coords)
+		self.blue_conv_coords.append(blue_coords)
 
-		while (coords != -1):
-			coords = self.take_turn(coords)
+		done = False
 
-			if (coords != -1):
-				self.converted_coords.append(coords)
-			else:
-				location_found = False
-				target = len(self.converted_coords) - 2
+		while (done == False):
+			if (red_coords != -1):
+				red_coords = self.take_turn(red_coords, Cell.RED)
 
-				while (location_found == False and target > 0):
-					location = Location(self.converted_coords[target], self.grid)
-					if (location.hasFreeSpace()):
-						coords = location.location
-						location_found = True
-						print "Found free space back some squares"
-					else:
-						coords = -1
-						print "No space found"
+				if (red_coords != -1):
+					self.red_conv_coords.append(red_coords)
+				else:
+					location_found = False
+					target = len(self.red_conv_coords) - 2
 
-					target = target - 1
+					while (location_found == False and target > 0):
+						location = Location(self.red_conv_coords[target], self.grid)
+						if (location.hasFreeSpace()):
+							red_coords = location.location
+							location_found = True
+							print "Found free space back some squares (RED)"
+						else:
+							red_coords = -1
+							print "No space found (RED)"
+
+						target = target - 1
+
+			if (blue_coords != -1):
+				blue_coords = self.take_turn(blue_coords, Cell.BLUE)
+
+				if (blue_coords != -1):
+					self.blue_conv_coords.append(blue_coords)
+				else:
+					location_found = False
+					target = len(self.blue_conv_coords) - 2
+
+					while (location_found == False and target > 0):
+						location = Location(self.blue_conv_coords[target], self.grid)
+						if (location.hasFreeSpace()):
+							blue_coords = location.location
+							location_found = True
+							print "Found free space back some squares (BLUE)"
+						else:
+							blue_coords = -1
+							print "No space found (BLUE)"
+
+						target = target - 1
+
+			if (red_coords == -1 and blue_coords == -1):
+				done = True
 
 			self.grid.writer.save_frame(self.grid)
 
-	def find_start(self):
+	def find_start(self, color):
 		for y in range(self.grid.height):
 			for x in range(self.grid.width):
-				if (self.grid.getCell(x, y) == Cell.RED):
+				if (self.grid.getCell(x, y) == color):
 					return (x, y)
 
 		return -1
 
-	def take_turn(self, coords):	
+	def take_turn(self, coords, color):	
 		location = Location(coords, self.grid)
 		
 		random_direction = location.getRandomDirection()
 
 		if (random_direction != -1):
-			self.grid.setCell(random_direction.coords, Cell.RED)
+			self.grid.setCell(random_direction.coords, color)
 			return random_direction.coords
 		else:
 			return -1
